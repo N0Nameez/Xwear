@@ -1,5 +1,6 @@
 <script>
 import { ref, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 
 const useDropdown = () => {
     const isOpen = ref(false);
@@ -43,18 +44,39 @@ const useDropdown = () => {
 
 export default {
     setup() {
+        const router = useRouter();
+        
         const clothesDropdown = useDropdown();
         const shoesDropdown = useDropdown();
         const accessoriesDropdown = useDropdown();
         const brandsDropdown = useDropdown();
         const infoDropdown = useDropdown();
 
+        // Функции навигации
+        const navigateToHome = () => {
+            router.push('/');
+        };
+
+        const navigateToCatalog = () => {
+            router.push('/catalog');
+        };
+
+        const navigateToCategory = (category) => {
+            router.push({ 
+                path: '/catalog',
+                query: { category: category.toLowerCase() }
+            });
+        };
+
         return {
             clothesDropdown,
             shoesDropdown,
             accessoriesDropdown,
             brandsDropdown,
-            infoDropdown
+            infoDropdown,
+            navigateToHome,
+            navigateToCatalog,
+            navigateToCategory
         };
     }
 };
@@ -62,7 +84,7 @@ export default {
 
 <template>
     <div class="header">
-        <div class="logo">
+        <div class="logo" @click="navigateToHome" style="cursor: pointer;">
             <svg width="84" height="35" viewBox="0 0 84 35" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M3.18184 17.2429L0.00929272 0.257658C-0.000770003 0.226003 -0.00269658 0.192324 0.00368984 0.159728C0.0100763 0.127132 0.0245699 0.0966711 0.0458341 0.0711541C0.0670983 0.045637 0.0944477 0.025887 0.125358 0.0137273C0.156268 0.00156759 0.189742 -0.00261013 0.222693 0.00157938H5.28454C5.34677 -0.00322707 5.40842 0.0163523 5.45648 0.0561754C5.50453 0.0959985 5.53521 0.152945 5.54204 0.214979L7.21368 11.666H8.06728L9.74034 0.214979C9.74682 0.152798 9.77741 0.0956337 9.82555 0.0557413C9.87368 0.0158489 9.93553 -0.00359549 9.99784 0.00157938H15.0583C15.0912 -0.00249154 15.1247 0.00175076 15.1556 0.0139183C15.1865 0.0260858 15.2139 0.0457929 15.2353 0.0712453C15.2566 0.0966976 15.2713 0.127086 15.2779 0.159645C15.2845 0.192204 15.2828 0.225896 15.2731 0.257658L12.4847 17.2429L15.2731 34.0972C15.2831 34.1291 15.285 34.1629 15.2785 34.1957C15.2721 34.2284 15.2575 34.2591 15.2361 34.2847C15.2147 34.3103 15.1872 34.3302 15.1561 34.3424C15.125 34.3547 15.0914 34.3589 15.0583 34.3547H10.0021C9.93958 34.3599 9.87753 34.3402 9.82936 34.3C9.78118 34.2599 9.75074 34.2023 9.7446 34.1399L8.07155 22.6889H7.21795L5.54631 34.1399C5.53982 34.2022 5.50929 34.2595 5.4612 34.2996C5.41311 34.3397 5.35126 34.3595 5.28881 34.3547H0.229807C0.196786 34.3586 0.163313 34.3542 0.132441 34.3418C0.101569 34.3295 0.0742809 34.3096 0.053064 34.284C0.0318471 34.2584 0.017377 34.2279 0.010974 34.1953C0.00457099 34.1627 0.00643881 34.1289 0.0164065 34.0972L3.18184 17.2429Z"
@@ -90,10 +112,10 @@ export default {
 
                 <Transition name="transition">
                     <div v-if="clothesDropdown.isOpen.value" class="dropdown-menu">
-                        <a>Футболки</a>
-                        <a>Кофты</a>
-                        <a>Штаны</a>
-                        <a>Шорты</a>
+                        <a @click="navigateToCategory('футболки')">Футболки</a>
+                        <a @click="navigateToCategory('худи')">Худи</a>
+                        <a @click="navigateToCategory('штаны')">Штаны</a>
+                        <a @click="navigateToCategory('шорты')">Шорты</a>
                     </div>
                 </Transition>
             </div>
@@ -105,9 +127,9 @@ export default {
 
                 <Transition name="transition">
                     <div v-if="shoesDropdown.isOpen.value" class="dropdown-menu">
-                        <a>Кеды</a>
-                        <a>Кроссовки</a>
-                        <a>Ботинки</a>
+                        <a @click="navigateToCategory('кеды')">Кеды</a>
+                        <a @click="navigateToCategory('кроссовки')">Кроссовки</a>
+                        <a @click="navigateToCategory('ботинки')">Ботинки</a>
                     </div>
                 </Transition>
             </div>
@@ -118,40 +140,16 @@ export default {
 
                 <Transition name="transition">
                     <div v-if="accessoriesDropdown.isOpen.value" class="dropdown-menu">
-                        <a>Головные уборы</a>
-                        <a>Ремни</a>
-                        <a>Сумки</a>
-                        <a>Украшения</a>
+                        <a @click="navigateToCategory('головные уборы')">Головные уборы</a>
+                        <a @click="navigateToCategory('ремни')">Ремни</a>
+                        <a @click="navigateToCategory('сумки')">Сумки</a>
                     </div>
                 </Transition>
             </div>
             <div class="menu-item" @mouseenter="brandsDropdown.openDropdown()"
                 @mouseleave="brandsDropdown.closeDropdown()">
 
-                <button>Бренды</button>
-
-                <Transition name="transition">
-                    <div v-if="brandsDropdown.isOpen.value" class="dropdown-menu">
-                        <a>Nike</a>
-                        <a>Puma</a>
-                        <a>Adidas</a>
-                        <a>Reebok</a>
-                    </div>
-                </Transition>
-            </div>
-            <div class="menu-item" @mouseenter="infoDropdown.openDropdown()" @mouseleave="infoDropdown.closeDropdown()">
-
-                <button>Информация</button>
-
-                <Transition name="transition">
-                    <div v-if="infoDropdown.isOpen.value" class="dropdown-menu">
-                        <a>Наш блог</a>
-                        <a>Наши контакты</a>
-                        <a>Доставка</a>
-                        <a>Оплата</a>
-                        <a>FAQ</a>
-                    </div>
-                </Transition>
+                <button @click="navigateToCatalog()">Каталог</button>
             </div>
         </div>
 
@@ -280,6 +278,7 @@ export default {
     padding: 0 10px;
     transition: all .3s ease;
     position: relative;
+    cursor: pointer;
 }
 
 .dropdown-menu a:hover {
@@ -346,6 +345,7 @@ export default {
     color: white;
     font-size: 14px;
     transition: all .3s ease;
+    cursor: pointer;
 
     &:hover {
         color: #49D0FF;
