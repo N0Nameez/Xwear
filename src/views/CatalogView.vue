@@ -14,11 +14,9 @@ const sortBy = ref('title');
 const selectedSizes = ref([]);
 const selectedBrands = ref([]);
 
-// Mock данные для фильтров
 const sizes = ref(['36.00', '37.00', '38.00', '39.00', '40.00', '41.00', '42.00', '43.00', '44.00', '45.00']);
 const brands = ref(['Nike', 'Adidas', 'Puma', 'Reebok', 'New Balance', 'Converse', 'Vans']);
 
-// Получение товаров
 async function fetchProducts() {
   try {
     loading.value = true;
@@ -33,7 +31,6 @@ async function fetchProducts() {
   }
 }
 
-// Обработка query параметров при загрузке страницы
 onMounted(() => {
   fetchProducts();
   
@@ -42,18 +39,16 @@ onMounted(() => {
   }
 });
 
-// Следим за изменениями query параметров
 watch(() => route.query, (newQuery) => {
   if (newQuery.category) {
     selectedCategory.value = newQuery.category;
   }
 });
 
-// Фильтрация и сортировка товаров
 const filteredProducts = computed(() => {
   let filtered = products.value;
 
-  // Фильтрация по поисковому запросу
+
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(product => 
@@ -64,14 +59,12 @@ const filteredProducts = computed(() => {
     );
   }
 
-  // Фильтрация по категории
   if (selectedCategory.value) {
     filtered = filtered.filter(product => 
       product.category?.toLowerCase() === selectedCategory.value.toLowerCase()
     );
   }
 
-  // Сортировка
   switch (sortBy.value) {
     case 'price':
       return filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -86,13 +79,11 @@ const filteredProducts = computed(() => {
   }
 });
 
-// Уникальные категории для фильтра
 const uniqueCategories = computed(() => {
   const categories = products.value.map(product => product.category);
   return [...new Set(categories)].sort();
 });
 
-// Текущее название категории для заголовка
 const currentCategoryTitle = computed(() => {
   if (selectedCategory.value) {
     return selectedCategory.value.charAt(0).toUpperCase() + selectedCategory.value.slice(1);
@@ -107,38 +98,18 @@ function clearFilters() {
   selectedBrands.value = [];
 }
 
-// Функции для работы с фильтрами
-const toggleSize = (size) => {
-  const index = selectedSizes.value.indexOf(size);
-  if (index > -1) {
-    selectedSizes.value.splice(index, 1);
-  } else {
-    selectedSizes.value.push(size);
-  }
-};
 
-const toggleBrand = (brand) => {
-  const index = selectedBrands.value.indexOf(brand);
-  if (index > -1) {
-    selectedBrands.value.splice(index, 1);
-  } else {
-    selectedBrands.value.push(brand);
-  }
-};
 </script>
 
 <template>
   <div class="catalog-page">
-    <!-- Заголовок и количество товаров -->
     <div class="catalog-header">
       <h1 class="category-title">{{ currentCategoryTitle.toUpperCase() }}</h1>
       <span class="products-count">{{ filteredProducts.length }} товаров</span>
     </div>
 
     <div class="catalog-layout">
-      <!-- Боковая панель с фильтрами -->
       <aside class="filters-sidebar">
-        <!-- Фильтр по цене -->
         <div class="filter-group">
           <h3 class="filter-title">ФИЛЬТР ПО ЦЕНЕ</h3>
           <div class="price-filter">
@@ -150,7 +121,6 @@ const toggleBrand = (brand) => {
           </div>
         </div>
 
-        <!-- Фильтр по размерам -->
         <div class="filter-group">
           <h3 class="filter-title">РАЗМЕРЫ (EU)</h3>
           <div class="sizes-grid">
@@ -166,7 +136,6 @@ const toggleBrand = (brand) => {
           </div>
         </div>
 
-        <!-- Фильтр по брендам -->
         <div class="filter-group">
           <h3 class="filter-title">БРЕНДЫ</h3>
           <div class="brands-list">
@@ -188,9 +157,7 @@ const toggleBrand = (brand) => {
         </div>
       </aside>
 
-      <!-- Основная область с товарами -->
       <main class="products-main">
-        <!-- Панель управления -->
         <div class="controls-panel">
           <div class="search-box">
             <input 
@@ -221,7 +188,6 @@ const toggleBrand = (brand) => {
           </div>
         </div>
 
-        <!-- Состояния загрузки и ошибки -->
         <div v-if="loading" class="loading-state">
           <div class="loading-spinner"></div>
           <p>Загрузка товаров...</p>
@@ -243,7 +209,6 @@ const toggleBrand = (brand) => {
           </button>
         </div>
 
-        <!-- Сетка товаров -->
         <div v-else class="products-grid">
           <div
             v-for="product in filteredProducts"
@@ -292,7 +257,6 @@ const toggleBrand = (brand) => {
   align-items: start;
 }
 
-/* Стили для боковой панели фильтров */
 .filters-sidebar {
   background: #f8f9fa;
   border-radius: 12px;
@@ -318,7 +282,6 @@ const toggleBrand = (brand) => {
   letter-spacing: 0.5px;
 }
 
-/* Стили для фильтра цен */
 .price-filter {
   margin-top: 15px;
 }
@@ -358,7 +321,6 @@ const toggleBrand = (brand) => {
   color: #666;
 }
 
-/* Стили для фильтра размеров */
 .sizes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -390,7 +352,6 @@ const toggleBrand = (brand) => {
   border-color: #333;
 }
 
-/* Стили для фильтра брендов */
 .brands-list {
   margin-top: 15px;
 }
@@ -444,7 +405,6 @@ const toggleBrand = (brand) => {
   transform: rotate(45deg);
 }
 
-/* Стили для основной области */
 .products-main {
   min-height: 600px;
 }
@@ -519,7 +479,7 @@ const toggleBrand = (brand) => {
   border-color: #333;
 }
 
-/* Сетка товаров */
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -534,7 +494,6 @@ const toggleBrand = (brand) => {
   transform: translateY(-2px);
 }
 
-/* Состояния загрузки и ошибки */
 .loading-state {
   text-align: center;
   padding: 80px 20px;
@@ -604,7 +563,6 @@ const toggleBrand = (brand) => {
   background: #555;
 }
 
-/* Адаптивность */
 @media (max-width: 1024px) {
   .catalog-layout {
     grid-template-columns: 1fr;
