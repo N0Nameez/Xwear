@@ -63,7 +63,6 @@ export const useAuthStore = defineStore('auth', () => {
             
             console.log('Ответ от сервера:', response.data)
 
-            // Обновляем данные пользователя
             user.value = response.data
             localStorage.setItem('user', JSON.stringify(response.data))
             
@@ -79,6 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const logout = () => {
         user.value = null
+        error.value = null
         localStorage.removeItem('user')
     }
 

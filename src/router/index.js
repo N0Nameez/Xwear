@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import CatalogView from '../views/CatalogView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegistView from '../views/RegisterView.vue'
+import ProductView from '../views/ProductView.vue'
 import ProfileView from '../views/ProfileView.vue'
 
 const router = createRouter({
@@ -32,6 +33,12 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView 
+    },
+    {
+      path: '/product/:id',
+      name: 'product',
+      component: ProductView,
+      props: true
     }
   ]
 })

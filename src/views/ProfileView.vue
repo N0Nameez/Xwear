@@ -55,7 +55,7 @@ const updateProfile = async () => {
   console.log('updateProfile called, editData:', editData.value)
   loading.value = true
   
-  try 
+  try {
     const profileData = {
       UserId: authStore.user.id,
       Name: editData.value.name,
@@ -64,12 +64,14 @@ const updateProfile = async () => {
       NewPassword: editData.value.newPassword
     }
 
-    console.log('Отправка данных на сервер:', profileData
+    console.log('Отправка данных на сервер:', profileData)
     const updatedUser = await authStore.updateProfile(profileData)
     
     console.log('Профиль успешно обновлен:', updatedUser)
+
     editData.value.name = updatedUser.name || ''
     editData.value.email = updatedUser.email || ''
+
     editData.value.currentPassword = ''
     editData.value.newPassword = ''
     

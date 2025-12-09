@@ -6,8 +6,12 @@ import { useAuthStore } from '@/stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
+authStore.error = null;
+
 const email = ref('')
 const password = ref('')
+
+const error = ref()
 
 const handleLogin = async () => {
   try {
